@@ -56,7 +56,7 @@ python predict.py
 
 Check the `config.py` to see what you could adjust.
 
-You can also use `hypertune.py` to find the best hyper parameter. [Weights & Biases (wandb.ai)](https://wandb.ai/home)
+You can also use `hypertune.py` to find the best hyper parameter. see [Weights & Biases (wandb.ai)](https://wandb.ai/home)
 
 
 
