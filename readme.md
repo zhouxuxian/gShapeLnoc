@@ -88,9 +88,9 @@ You can also use `hypertune.py` to find the best hyper parameter. [Weights & Bia
 
 all data are avalible in   *data/rnalight*  folder. 
 
-The **train.csv**is used in k-fold cross validation.
+The **train.csv** is used in k-fold cross validation.
 
-The **test.csv**is used in comparison with other existing predictors.
+The **test.csv** is used in comparison with other existing predictors.
 
 
 
