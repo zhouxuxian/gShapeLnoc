@@ -1,4 +1,4 @@
-# GShapeLnoc
+# gShapeLnoc
 
 This is the official repository of the paper "gShapeLnoc: A Graph Network Incorporating Shapelet Embedding
 
