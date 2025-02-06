@@ -7,7 +7,7 @@ from models.Model import LncLoc
 from models.utils import get_neighbor, idng, generate_weight_by_shapelet
 from shaplet import get_shapelet
 
-
+#最终的预测器
 class Localizer:
     def __init__(self, weightPath, shapePath, k=3, embed_dim=256, hidden_dim=256, window_size=40, device='cuda:0'):
         self.k = k
