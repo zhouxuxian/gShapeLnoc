@@ -1,5 +1,5 @@
+#调参使用，大部分内容和main.py一致
 import logging
-
 import wandb
 from sklearn.model_selection import KFold
 from torch.utils.data import SubsetRandomSampler
