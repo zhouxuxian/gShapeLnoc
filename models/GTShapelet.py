@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch
 from models.utils import get_mask
 
-
+#参考GraphTrans的实现
 class GTShapelet(nn.Module):
     def __init__(self, k, embed_dim=128, num_heads=4):
         super(GTShapelet, self).__init__()
