@@ -1,0 +1,2 @@
+Localizer.py是最终的预测类，主要由Model.py中的LncLoc构成。
+GTShapelet.py对应图编码器和图注意力的部分
