@@ -15,16 +15,10 @@ from config import config
 
 warnings.filterwarnings("ignore")
 sys.path.append("./models")
-
-
-
-
-
 loss_fn = torch.nn.BCEWithLogitsLoss()
-
 sigmoid = torch.nn.Sigmoid()
 
-
+#训练迭代
 def train_step(dataloader, model, opt, config):
     model.train()
     tot_loss = 0
@@ -39,7 +33,7 @@ def train_step(dataloader, model, opt, config):
         tot_loss += loss
     return tot_loss
 
-
+#测试
 def test_performance(dataloader, model, threshold=0.5, config=None):
     model.eval()
     prob = []
@@ -61,7 +55,7 @@ def test_performance(dataloader, model, threshold=0.5, config=None):
               f'f1:{ans["f1"]}')
         return ans
 
-
+#训练主函数
 def train_fine_tune():
     torch.manual_seed(config.seed)
     torch.cuda.manual_seed_all(config.seed)
@@ -72,13 +66,14 @@ def train_fine_tune():
     train_dataset = idng_dataset(data_path=f'{config.data_path}/train.csv', k=config.k,
                                  data_save_path=config.data_save_path, shapelet_info=shapelet_info,
                                  reload=config.reload, window_size=config.window_size)
-    # test_dataset = idng_dataset(data_path=f'{config.data_path}/test.csv', k=config.k,
-    #                             data_save_path=config.data_save_path, shapelet_info=shapelet_info, reload=config.reload,
-    #                             window_size=config.window_size)
+    test_dataset = idng_dataset(data_path=f'{config.data_path}/test.csv', k=config.k,
+                                 data_save_path=config.data_save_path, shapelet_info=shapelet_info, reload=config.reload,
+                                 window_size=config.window_size)
 
     kf = KFold(n_splits=10, shuffle=True, random_state=config.seed)
-    # test_dataloader = GraphDataLoader(test_dataset, batch_size=config.batch_size)
+    test_dataloader = GraphDataLoader(test_dataset, batch_size=config.batch_size)
     best_auc = 0
+    # k-flod
     for i, (train_idx, dev_idx) in enumerate(kf.split(train_dataset)):
         train_sampler = SubsetRandomSampler(train_idx)
         dev_sampler = SubsetRandomSampler(dev_idx)
@@ -118,19 +113,3 @@ if __name__ == '__main__':
 
     config = config()
     train_fine_tune()
-
-
-    # ls = os.listdir('data/raw/CNRCI_train_data_source/transcripts_type')
-    # for d in ls:
-    #     make_path(f'ckpt/finetune/{d}')
-    #     # idng_dataset(f'data/{d}/benchmark_train.csv', 3,f'ckpt/finetune/{d}')
-    #     # idng_dataset(f'data/{d}/benchmark_dev.csv', 3, f'ckpt/finetune/{d}')
-    #     # idng_dataset(f'data/{d}/test_set.csv', 3, f'ckpt/finetune/{d}')
-    #     logging.info(f'{d} start logging....')
-    #     logging.info('=' * 100)
-    #     config.data_path = f'data/{d}'
-    #     config.data_save_path = f'ckpt/finetune/{d}'
-    #     train_fine_tune()
-    #     logging.info('=' * 100)
-    #     logging.info(f'{d} end logging....')
-    # sendMail('train.log')
