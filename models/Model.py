@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from models.GTShapelet import GTShapelet
 
-
+#包含了图编码器和shapelet部分
 class LncLoc(nn.Module):
     def __init__(self, k, embed_dim=256, num_heads=4, hidden_dim=256):
         super(LncLoc, self).__init__()
