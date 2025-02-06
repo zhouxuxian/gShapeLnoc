@@ -59,7 +59,7 @@ def test_performance(dataloader, model, threshold=0.5, config=None):
               f'f1:{ans["f1"]}')
         return ans
 
-
+#同main.py
 def train_fine_tune():
     wandb.init()
     config = wandb.config
@@ -123,7 +123,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="input the window_size")
     parser.add_argument('--gpu', type=int, default=0)
     args = parser.parse_args()
-
+    #wandb相关的设置
     sweep_configuration = {
         'method': 'random',
         'name': 'swp_casual',
