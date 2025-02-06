@@ -4,16 +4,16 @@ from collections import defaultdict
 from tqdm import trange
 import pandas as pd
 
-
+#得分函数1
 def score_function(item):
     return (max(item[1][0], item[1][1]) + 1) / (min(item[1][0], item[1][1]) + 1)
 
-
+#得分函数2
 def score_function2(item):
     return (max(item[1][0], item[1][1]) + 1) / (min(item[1][0], item[1][1]) + 1) * (
             2 * int(item[1][0] < item[1][1]) - 1)
 
-
+#获取shapelet,路径为数据集路径，格式为制表符分隔
 def get_shapelet(path='data/rnalight/train.csv', k_=4):
     df = pd.read_csv(path, sep='\t')
     TrainSet = [seq for seq in df['code'].values]
@@ -39,7 +39,7 @@ def get_shapelet(path='data/rnalight/train.csv', k_=4):
         pickle.dump(ans, f)
     return ans
 
-
+#利用shapelet提取motif所用
 def get_shapelet_motif(path='data/rnalight/train.csv', k_=[4]):
     df = pd.read_csv(path, sep='\t')
     TrainSet = [seq for seq in df['code'].values]
