@@ -1,4 +1,4 @@
-
+#部分参数设置
 class config:
     def __init__(self):
         super(config, self).__init__()
