@@ -3,7 +3,8 @@ import torch.nn as nn
 import torch
 from models.utils import get_mask
 
-#参考GraphTrans的实现
+#参考GraphTrans的实现，包含GIN和Transformer
+#前向传播时，未按照两类边分别传播的版本。
 class GTShapelet(nn.Module):
     def __init__(self, k, embed_dim=128, num_heads=4):
         super(GTShapelet, self).__init__()
@@ -21,6 +22,7 @@ class GTShapelet(nn.Module):
         self.norm_after = nn.LayerNorm(embed_dim)
         self.set_parameter()
 
+    #参数初始化
     def set_parameter(self):
         for name, param in self.named_parameters():
             if 'norm' in name:
@@ -41,7 +43,8 @@ class GTShapelet(nn.Module):
             src_padding_mask = get_mask(g)
             h = h.view(-1, self.num_nodes, self.embed_dim)  # batch_size  * num_node * embed
            # h = torch.einsum('bne,bn->bne', h, sw)
-        expand_cls_embedding = self.cls_embedding.expand(h.size(0), 1, -1)  # batchsize * 1 * embed
+        #拼接类别向量
+        expand_cls_embedding = self.cls_embedding.expand(h.size(0), 1, -1)  # batchsize * 1 * embed  
         h = torch.cat([h, expand_cls_embedding], dim=1)  # batch * length * dim
         zeros = src_padding_mask.data.new(src_padding_mask.size(0), 1).fill_(0)
         src_padding_mask = torch.cat([src_padding_mask, zeros], dim=1)
