@@ -47,6 +47,7 @@ class idng_dataset(DGLDataset):
         for i, (lab, seq) in enumerate(tzip(self.labels, rna_seq, desc='generate graphs')):
             graph = idng(seq, self.k, neighbor_dict, window_size=self.window_size)
             sw = generate_weight_by_shapelet(seq, self.shapelet_info, k=self.k)
+            #保存形状子信息
             self.shape_weight.append(sw)
             self.graph.append(graph)
             ##############################
@@ -58,7 +59,7 @@ class idng_dataset(DGLDataset):
 
     def __len__(self):
         return len(self.graph)
-
+    #数据集保存
     def save(self):
         tqdm.write('==========save processed data============')
         graph_info = {'graph': self.graph, 'labels': self.labels, 'shape_weight': self.shape_weight,
@@ -67,7 +68,7 @@ class idng_dataset(DGLDataset):
         with open(f'{self.data_save_path}/{self.data_path.split("/")[-1].split(".")[0]}_k{self.k}_idng.pkl', 'wb') as f:
             pickle.dump(graph_info, f)
         f.close()
-
+    #数据集加载
     def load(self):
         tqdm.write('==========load processed data============')
         with open(f'{self.data_save_path}/{self.data_path.split("/")[-1].split(".")[0]}_k{self.k}_idng.pkl',
@@ -79,7 +80,7 @@ class idng_dataset(DGLDataset):
             self.shape_freq = graph_info['shape_freq']
 
         f.close()
-
+    #判断是否存在
     def has_cache(self):
         return not self.reload and os.path.exists(
             f'{self.data_save_path}/{self.data_path.split("/")[-1].split(".")[0]}_k{self.k}_idng.pkl')
