@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from torch.utils import data
 
-
+#one-hot编码对应数据集
 class onehot_dataset(data.Dataset):
     def __init__(self, df):
         self.nt_dict = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
@@ -22,7 +22,6 @@ class onehot_dataset(data.Dataset):
         return self.x[index], self.y[index]
 
     def __len__(self):
-        # You should change 0 to the total size of your dataset.
         return len(self.x)
 
 
