@@ -20,13 +20,12 @@ nt_dict = {'A': 0, 'C': 1, 'G': 2, 'U': 3, 'T': 3, 'I': 0, 'H': 1, 'M': 2, 'S': 
 rev_dict = {'A': 'T', 'G': 'C', 'C': 'G', 'T': 'A', 'A': 'U', 'U': 'A'}
 nts = ['A', 'C', 'G', 'T']
 
-
 def pse_normalize(pse_knc):
     mu = np.mean(pse_knc, axis=0)
     sigma = np.std(pse_knc, axis=0)
     return (pse_knc - mu) / sigma
 
-
+#对比学习指标
 def do_CL(X, Y, T):
     X = F.normalize(X, dim=-1)
     Y = F.normalize(Y, dim=-1)
@@ -43,13 +42,13 @@ def do_CL(X, Y, T):
 
     return CL_loss, CL_acc
 
-
+#对比学习损失函数
 def dual_CL(X, Y, T=0.3):
     CL_loss_1, CL_acc_1 = do_CL(X, Y, T)
     CL_loss_2, CL_acc_2 = do_CL(Y, X, T)
     return (CL_loss_1 + CL_loss_2) / 2, (CL_acc_1 + CL_acc_2) / 2
 
-
+#序列对齐函数
 def pad_batch(bg, max_input_len):
     num_batch = bg.batch_size
     graphs = dgl.unbatch(bg)
@@ -77,7 +76,7 @@ def get_mask(bg):
     mask = mask.view(num_batch, -1).to(bg.device)
     return mask
 
-
+#kmer字符转数字
 def kmer2num(kmer):
     ans = 0
     for i in range(len(kmer)):
@@ -85,7 +84,7 @@ def kmer2num(kmer):
         ans = d + ans * 4
     return ans
 
-
+#德布鲁因图构建函数
 def de_Bruijn_graph(seq, k):
     """
     :param seq:序列表示
@@ -208,7 +207,7 @@ def de_Bruijn_graph(seq, k):
 #     cur = time.time()
 #     print(f'generate secondary consume {format(cur - pre, ".1f")}s')
 
-
+#idng邻居节点
 def get_neighbor(k):
     """
 
@@ -227,7 +226,7 @@ def get_neighbor(k):
         ans[int(''.join(kmer), 4)].append(int(''.join(kmer), 4))
     return ans
 
-
+#idng图
 def idng(seq, k, neighbor_dict, window_size=20):
     """
     create an interval directed neighbor-based graph
@@ -272,7 +271,7 @@ def idng(seq, k, neighbor_dict, window_size=20):
     graph.edata['weight'] = norm_weight
     return graph
 
-
+#数字转kmer
 def num2kmer(i, k):
     kmer = ''
     nt2int = ['A', 'C', 'G', 'T']
@@ -310,7 +309,7 @@ def num2kmer(i, k):
 #     fea = torch.tensor(list(fp))
 #     return fea
 
-
+#根据形状子信息过滤
 def generate_weight_by_shapelet(seq, shapelet_info, k=3):  # 1
     """
     :param seq: seq of rna
@@ -327,7 +326,7 @@ def generate_weight_by_shapelet(seq, shapelet_info, k=3):  # 1
                 ans[kmer2num(cur_word)] += score
     return ans
 
-
+#获得频率
 def get_freq(seq):
     """
     2, 3, 4 ,5 mer 1360d
@@ -347,7 +346,7 @@ def get_freq(seq):
 
     return torch.FloatTensor(freq)
 
-
+#反向互补序列
 def get_rev(seq):
     """
     get the rev complement
@@ -356,7 +355,7 @@ def get_rev(seq):
     """
     return ''.join([rev_dict[seq[i]] for i in range(len(seq) - 1, -1, -1)])
 
-
+#辅助函数，递归创建文件
 def make_path(path):
     if os.path.exists(path): return
     if '/' not in path:
@@ -369,7 +368,7 @@ def make_path(path):
 def random_pseudo_rev(seq):
     return ''.join([nts[np.random.randint(4)] for _ in range(len(seq))])
 
-
+#结果输出函数
 def eval_output(model_perf, path):
     with open(os.path.join(path, f"Evaluate_Result_TestSet.txt"), 'w') as f:
         f.write("AUROC=%s\tAUPRC=%s\tAccuracy=%s\tMCC=%s\tRecall=%s\tPrecision=%s\tf1_score=%s\n" %
