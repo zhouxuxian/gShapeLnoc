@@ -74,9 +74,7 @@
 #     train_dataset = combine_graph(data_path=f'{config.data_path}/train.csv', k=config.k,
 #                                  data_save_path=config.data_save_path, shapelet_info=shapelet_info,
 #                                  reload=config.reload, window_size=config.window_size)
-#     test_dataset = combine_graph(data_path=f'{config.data_path}/test.csv', k=config.k,
-#                                 data_save_path=config.data_save_path, shapelet_info=shapelet_info, reload=config.reload,
-#                                 window_size=config.window_size)
+
 # 
 #     kf = KFold(n_splits=10, shuffle=True, random_state=config.seed)
 #     test_dataloader = GraphDataLoader(test_dataset, batch_size=config.batch_size)
@@ -105,7 +103,7 @@
 #                 make_path(save_dir)
 #                 torch.save(model.state_dict(), f'{save_dir}/best.pt')
 # 
-#                 model_pref = test_performance(test_dataloader, model, config=config)
+#                 model_pref = test_performance(valid_dataloader, model, config=config)
 #                 eval_output(model_pref, path=save_dir)
 #                 plot_AUROC(model_pref, path=save_dir)
 # 
