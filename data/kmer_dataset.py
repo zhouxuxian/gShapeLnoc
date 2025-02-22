@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from torch.utils import data
 
-
+#kmer频率数据集
 class kmer_dataset(data.Dataset):
     def __init__(self,df,k=4):
         self.k = k
