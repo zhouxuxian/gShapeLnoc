@@ -15,6 +15,8 @@ from config import config
 
 warnings.filterwarnings("ignore")
 sys.path.append("./models")
+
+#损失函数
 loss_fn = torch.nn.BCEWithLogitsLoss()
 sigmoid = torch.nn.Sigmoid()
 
@@ -60,28 +62,29 @@ def train_fine_tune():
     torch.manual_seed(config.seed)
     torch.cuda.manual_seed_all(config.seed)
     shapelet_info = []
-    if config.use_shapelet == 1:
+    if config.use_shapelet == 1: #形状子信息
         shapelet_info = get_shapelet(k_=4)[:200]
 
+    #创建数据集
     train_dataset = idng_dataset(data_path=f'{config.data_path}/train.csv', k=config.k,
                                  data_save_path=config.data_save_path, shapelet_info=shapelet_info,
                                  reload=config.reload, window_size=config.window_size)
-    test_dataset = idng_dataset(data_path=f'{config.data_path}/test.csv', k=config.k,
-                                 data_save_path=config.data_save_path, shapelet_info=shapelet_info, reload=config.reload,
-                                 window_size=config.window_size)
-
+    
+    #10折交叉验证
     kf = KFold(n_splits=10, shuffle=True, random_state=config.seed)
     test_dataloader = GraphDataLoader(test_dataset, batch_size=config.batch_size)
     best_auc = 0
     # k-flod
     for i, (train_idx, dev_idx) in enumerate(kf.split(train_dataset)):
+        #训练、验证子数据集的采样下标
         train_sampler = SubsetRandomSampler(train_idx)
         dev_sampler = SubsetRandomSampler(dev_idx)
+        #idng数据集
         train_dataloader = GraphDataLoader(train_dataset, batch_size=config.batch_size, sampler=train_sampler)
         valid_dataloader = GraphDataLoader(train_dataset, batch_size=config.batch_size, sampler=dev_sampler)
         model = LncLoc(k=config.k, embed_dim=config.embed_dim, hidden_dim=config.hidden_dim)
         model.to(config.device)
-
+        #优化器
         opt = torch.optim.Adam(model.parameters(), lr=config.lr, weight_decay=config.decay)
 
         for epoch in range(config.epoch):
@@ -100,8 +103,6 @@ def train_fine_tune():
                 # model_performance = test_performance(test_dataloader, model, config=config)
                 # eval_output(model_performance, path=save_dir)
                 # plot_AUROC(model_performance, path=save_dir)
-
-            print(f'best_auc {best_auc}')
 
 
 if __name__ == '__main__':
