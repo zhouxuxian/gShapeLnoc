@@ -100,10 +100,7 @@ def train_fine_tune():
                 save_dir = config.res_dir + f'/{best_auc:.4f}'
                 make_path(save_dir)
                 torch.save(model.state_dict(), f'{save_dir}/best.pt')
-                # model_performance = test_performance(test_dataloader, model, config=config)
-                # eval_output(model_performance, path=save_dir)
-                # plot_AUROC(model_performance, path=save_dir)
-
+           
 
 if __name__ == '__main__':
     logging.basicConfig(filename="train.log",
