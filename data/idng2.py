@@ -12,6 +12,7 @@ import numpy as np
 import os
 
 """
+GTShapelet2所用数据集
 interval directed neighbor-based graph lncRNADataset
 """
 
